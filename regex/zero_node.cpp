@@ -16,6 +16,6 @@ ZeroNode::~ZeroNode() {
 
 // Attempt to match the string beginning at the given position.
 bool ZeroNode::match(const std::string &str, size_t &pos) {
-  // TODO: Implement this method.
-  return false;
+  while(_node->match(str, pos)){ /* nothing to do */ }
+  return true;
 }

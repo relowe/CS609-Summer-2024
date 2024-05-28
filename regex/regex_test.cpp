@@ -89,7 +89,17 @@ RegexNode *construct_regex1() {
   // create the result
   GroupNode *regex = new GroupNode();
 
-  // TODO: Impelemnt this function;
+  /*  Design AST 
+                 GROUP    regex
+                 /
+                *         zero
+               /
+              .           wildcard
+   */
+  // build in a bottom up sort of way
+  WildcardNode *wildcard = new WildcardNode();
+  ZeroNode *zero = new ZeroNode(wildcard);
+  regex->add_node(zero);
 
   return regex;
 }
@@ -99,7 +109,17 @@ RegexNode *construct_regex2() {
   // create the result
   GroupNode *regex = new GroupNode();
 
-  // TODO: Impelemnt this function;
+  /*  Design AST
+                 GROUP    regex  
+                /
+              *           wildcard
+            /
+           a              a
+   */
+  // build in a bottom up sort of way
+  CharacterNode *a = new CharacterNode('a');
+  ZeroNode *zero = new ZeroNode(a); 
+  regex->add_node(zero);
 
   return regex;
 }
@@ -110,6 +130,15 @@ RegexNode *construct_regex3() {
   GroupNode *regex = new GroupNode();
 
   // TODO: Impelemnt this function;
+  /* Design AST
+                 GROUP    regex  
+                /     \
+               *      GROUP
+              /       /    \
+            GROUP    a      c
+            /    \
+           a      b
+   */
 
   return regex;
 }

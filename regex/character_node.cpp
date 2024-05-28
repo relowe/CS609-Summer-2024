@@ -12,6 +12,10 @@ CharacterNode::CharacterNode(char _c)
 
 // Attempt to match the string beginning at the given position.
 bool CharacterNode::match(const std::string &str, size_t &pos) {
-  // TODO: Implement this method 
+  if(pos < str.length() && str[pos] == this->_c) {
+    pos++;
+    return true;
+  }
+
   return false;
 }

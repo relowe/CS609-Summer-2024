@@ -6,6 +6,10 @@
 
 // Attempt to match a wilcard pattern start position pos
 bool WildcardNode::match(const std::string &str, size_t &pos) {
-  // TODO: Implement this method.
+  if(pos<str.length()) {
+    pos++;
+    return true;
+  }
+
   return false;
 }
