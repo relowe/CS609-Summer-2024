@@ -44,9 +44,34 @@ Lexer::Token Lexer::next() {
   Token token;          // the result of the lexing process
   size_t final_pos = 0; // the position of the first character beyond the token
 
-  token.tok = Lexer::END_OF_INPUT;
+  // set the token defaults
+  token.tok = Lexer::INVALID;
+  token.pos = _pos;
 
-  // TODO: Implement this method.
+  // handle the end of input
+  if(at_end()) {
+    token.tok = Lexer::END_OF_INPUT;
+    token.lexeme = "";
+    return token;
+  }
+
+  // find the longest possible match
+  for(auto pattern : this->_tokens) {
+    size_t pos = this->_pos;
+    if(pattern.second->match(_input, pos) && pos > final_pos) {
+      final_pos = pos;
+      token.tok = pattern.first;
+    }
+  }
+
+  // update the _pos and the lexeme 
+  if(token.tok != Lexer::INVALID) {
+    token.lexeme = _input.substr(this->_pos, final_pos - this->_pos);
+    _pos = final_pos;
+  } else {
+    token.lexeme = _input.substr(this->_pos, 1);
+    _pos++;
+  }
   
   return token;
 }

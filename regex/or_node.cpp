@@ -14,8 +14,22 @@ OrNode::~OrNode() {
 
 // perform a greedy or match on the given string starting at pos
 bool OrNode::match(const std::string &str, size_t &pos) {
-  // TODO: Implement this method.
-  return false;
+  size_t max_pos = pos;
+  bool result = false;
+
+  //match, but find the longest match
+  for(RegexNode *node : _nodes) {
+    size_t cur_pos = pos;
+    if(node->match(str, cur_pos)) {
+      result = true;
+      if(cur_pos > max_pos) {
+        max_pos = cur_pos;
+      }
+    }
+  }
+
+  pos = max_pos;
+  return result;
 }
 
 

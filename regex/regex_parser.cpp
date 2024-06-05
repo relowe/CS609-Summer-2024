@@ -4,7 +4,7 @@
 #include "regex_parser.h"
 #include "regex.h"
 #include <iostream>
-
+  
 // Constructor
 RegexParser::RegexParser() {
   // nothing to do here
@@ -53,21 +53,42 @@ void RegexParser::next() {
 // < Regex >      ::= < Regex > < Match >
 //                    | < Match >
 RegexNode *RegexParser::parse_regex() {
-  // TODO: Implement this method.
-  return nullptr;
+  GroupNode *result = new GroupNode();
+  while(_cur.tok != RegexLexer::END_OF_INPUT) {
+    result->add_node(parse_match());
+  }
+
+  return result;
 }
 
 // < Match >      ::= < Match-Body > QUANTIFIER
 //                    | < Match-Body > PIPE < Match >
 //                    | < Match-Body >
 RegexNode *RegexParser::parse_match() {
-  // TODO: Implement this method.
-  return nullptr;
+  RegexNode *body = parse_match_body();
+
+  // handle quantifier
+  if(_cur.tok == RegexLexer::ZERO_QUANT) {
+    next();
+    return new ZeroNode(body);
+  } else if(_cur.tok == RegexLexer::ONE_QUANT) {
+    next();
+    return new OneNode(body);
+  }
+  
+  // TODO: Implement the rest of this method.
+  return body;
 }
 
 // < Match-Body > ::= LPAREN < Regex > RPAREN
 //                    | REGEX_NODE
 RegexNode *RegexParser::parse_match_body() {
-  // TODO: Implement this method.
+  if(_cur.tok == RegexLexer::REGEX_NODE) {
+    RegexNode *result = _cur.node;
+    next();
+    return result;
+  }
+  
+  // TODO: Implement the rest of this method.
   return nullptr;
 }

@@ -48,6 +48,7 @@ private:
   //                    | CLASS
   //                    | INVERSE_CLASS
   //                    | CHARACTER
+  //                    | WILDCARD
   RegexNode *parse_match_body();
 };
 

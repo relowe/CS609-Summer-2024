@@ -54,32 +54,31 @@ static RegexNode *construct_inv_class_node() {
 
 // Lparen: \(
 static RegexNode *construct_lparen_node() { 
-  // TODO: Implement this function.
-  return nullptr;
+  return new CharacterNode('(');
 } 
 
 // Rparen: \)
 static RegexNode *construct_rparen_node() { 
-  // TODO: Implement this function.
-  return nullptr;
+  return new CharacterNode(')');
 }
 
 // Pipe: \|
 static RegexNode *construct_pipe_node() { 
-  // TODO: Implement this function.
-  return nullptr;
+  return new CharacterNode('|');
 }
 
 // Wildcard: \.
 static RegexNode *construct_wildcard_node() { 
-  // TODO: Implement this function.
-  return nullptr;
+  return new CharacterNode('.');
 } 
 
 // Quantifier: \* | \+ | \?
 static RegexNode *construct_quantifier_node() {
-  // TODO: Implement this function.
-  return nullptr;
+  OrNode *result = new OrNode();
+  result->add_node(new CharacterNode('*'));
+  result->add_node(new CharacterNode('+'));
+  result->add_node(new CharacterNode('?'));
+  return result;
 }
 
 // Range: .-.
@@ -119,7 +118,18 @@ static void handle_inv_class(RegexLexer::LexerToken &result, Lexer &lexer) {
 }
 
 static void handle_quantifier(RegexLexer::LexerToken &result) {
-  // TODO: Implement this function
+  result.tok = RegexLexer::REGEX_NODE;
+  switch(result.lexeme[0]) {
+    case '*':
+      result.tok = RegexLexer::ZERO_QUANT;
+      break;
+    case '+':
+      result.tok = RegexLexer::ONE_QUANT;
+      break;
+    case '?':
+      result.tok = RegexLexer::OPTION_QUANT;
+      break;
+  }
 }
 
 //////////////////////////////////////////
@@ -128,7 +138,16 @@ static void handle_quantifier(RegexLexer::LexerToken &result) {
 
 // construct a regular expression lexer
 RegexLexer::RegexLexer() {
-  // TODO: Implement this method.
+  // blank input
+  input("");
+
+  _lexer.add_token(LPAREN_TOK, construct_lparen_node());
+  _lexer.add_token(RPAREN_TOK, construct_rparen_node());
+  _lexer.add_token(PIPE_TOK, construct_pipe_node());
+  _lexer.add_token(WILDCARD_TOK, construct_wildcard_node());
+  _lexer.add_token(QUANT_TOK, construct_quantifier_node());
+
+  //TODO: Add the other tokens
 }
 
 // set the input string
@@ -146,9 +165,38 @@ bool RegexLexer::at_end() const { return _lexer.at_end(); }
 // get the next RegexNode, null if there is none
 RegexLexer::LexerToken RegexLexer::next() {
   LexerToken result;
+  Lexer::Token lt = _lexer.next();
 
-  // TODO: Implement this method.
-  result.tok = INVALID;
+  //copy the basic fields
+  result.lexeme = lt.lexeme;
+  result.pos = lt.pos;
+
+  // process our token
+  switch(lt.tok) {
+    case INVALID:
+      result.tok = INVALID;
+      break;
+    case END_OF_INPUT:
+      result.tok = END_OF_INPUT;
+      break;
+    case LPAREN_TOK:
+      result.tok = LPAREN;
+      break;
+    case RPAREN_TOK:
+      result.tok = RPAREN;
+      break;
+    case PIPE_TOK:
+      result.tok = OR;
+      break;
+    case WILDCARD_TOK:
+      result.tok = REGEX_NODE;
+      result.node = new WildcardNode();
+      break;
+    case QUANT_TOK:
+      handle_quantifier(result);
+      break;
+    // TODO: Add the other tokens
+  }
 
   return result;
 }

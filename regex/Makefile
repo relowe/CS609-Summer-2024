@@ -16,7 +16,7 @@ REGEX_LIB=regex_node.o\
 LD=g++
 CC=g++
 CXX=g++
-CXXFLAGS=
+CXXFLAGS=-g
 
 all: $(TARGETS)
 regex_test: regex_test.o $(REGEX_LIB)
